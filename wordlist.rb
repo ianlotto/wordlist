@@ -19,7 +19,15 @@ class Wordlist
   end
   
   def subwords_from_length(length)
+    start = Time.now
+    words = by_word_length(length)
+    candidates = filter_words(words, length)
+    pairs = find_pairs(candidates, words[length], length)
+    run_time = (Time.now - start).round(2)
+    puts "There are #{pairs.length} winning combinations."
+    puts "Runtime: #{run_time} seconds."
     
+    pairs
   end
   
   private
