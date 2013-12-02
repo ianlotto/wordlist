@@ -24,11 +24,44 @@ class Wordlist
   
   private
   
-    def filter_words
+    def filter_words(words, length)
+      filtered = {}
+      [:start, :end].each do |anchor| 
+        filtered[anchor] = Hash.new { |h,k| h[k] = {} }
+      end 
     
+      words[length].each do |word, _v|
+        filtered.keys.each do |anchor| 
+          range = (anchor == :start) ? (1...length) : (-(length - 1)..-1)
+    
+          range.each do |i|
+            key = (anchor == :start) ? i : -i
+            subword = (anchor == :start) ? word[0...i] : word[i..-1]
+            filtered[anchor][key][subword] = true if words[key][subword]
+          end
+        end
+      end
+      puts "Filtering complete."
+
+      filtered
     end
     
-    def find_pairs
+    def find_pairs(candidates, checks, lengths)
+      winners = {}
+  
+      (1...length).each do |sub_length|
+        pair_length = length - sub_length
+        
+        candidates[:start][sub_length].each do |word, _v|
+          candidates[:end][pair_length].each do |other_word, _v|
+            candidate = word + other_word
+            winners[[word, other_word]] = candidate if checks[candidate]
+          end
+        end
+        
+      end
+      puts "Pairing complete."
       
+      winners
     end
 end
