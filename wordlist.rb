@@ -1,7 +1,7 @@
 class Wordlist
   attr_reader :list
   
-  def initialize(list)
+  def initialize(file)
     @list = File.readlines(file).map(&:chomp)
   end
   
@@ -57,7 +57,7 @@ class Wordlist
       filtered
     end
     
-    def find_pairs(candidates, checks, lengths)
+    def find_pairs(candidates, checks, length)
       winners = {}
   
       (1...length).each do |sub_length|
@@ -76,3 +76,6 @@ class Wordlist
       winners
     end
 end
+
+subwords = Wordlist.new("dictionary.txt").subwords_from_length(6)
+#p subwords
